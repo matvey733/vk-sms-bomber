@@ -16,7 +16,6 @@ export async function bomb(req: Request, res: Response) {
   if (!phoneNumbersStr) throw new Error("no phone numbers are provided");
   
   const phoneNumbers = phoneNumbersStr.split(" ");
-  
   const browser = await puppeteer.launch({ headless: false });
   console.log("Browser launched...");
   
