@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import puppeteer from "puppeteer";
+import puppeteer, { executablePath } from "puppeteer";
 import wait from "./utils/wait";
 import selectors from "./selectors";
 import range from "./utils/range";
@@ -16,7 +16,14 @@ export async function bomb(req: Request, res: Response) {
   if (!phoneNumbersStr) throw new Error("no phone numbers are provided");
   
   const phoneNumbers = phoneNumbersStr.split(" ");
-  const browser = await puppeteer.launch({ headless: false });
+
+  const NODE_ENV = process.env.NODE_ENV;
+  const browser = await puppeteer.launch({
+    headless: NODE_ENV === "production" ? true : false,
+    executablePath: NODE_ENV === "production"
+      ? process.env.PUPPETEER_EXECUTABLE_PATH
+      : puppeteer.executablePath()
+  });
   console.log("Browser launched...");
   
   const promises = phoneNumbers.map(async phoneNumber => {
