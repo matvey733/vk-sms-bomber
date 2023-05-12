@@ -1,4 +1,4 @@
-import { Page } from "puppeteer";
+import { Page } from "puppeteer-core";
 import selectors from "../selectors";
 import range from "../utils/range";
 import wait from "../utils/wait";

@@ -1,4 +1,4 @@
-import { Page } from "puppeteer";
+import { Page } from "puppeteer-core";
 
 export default async function doesStrExistOnPage(page: Page, str: string) {
   const html = await page.content();

@@ -1,4 +1,4 @@
-import { Page } from "puppeteer";
+import { Page } from "puppeteer-core";
 import wait from "../utils/wait";
 
 export default async function clickResendSmsBtn(page: Page) {
