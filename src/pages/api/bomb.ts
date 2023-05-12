@@ -10,8 +10,6 @@ import confirmSecondTimeIfNeeded from "./_browser/actions/confirmSecondTimeIfNee
 import getBrowser from "./_browser/utils/getBrowser";
 
 export default async function bomb(req: NextApiRequest, res: NextApiResponse) {
-  const token = process.env.TOKEN;
-
   const phoneNumbersStr = process.env.PHONE_NUMBERS;
   if (!phoneNumbersStr) throw new Error("no phone numbers are provided");
   
@@ -33,7 +31,7 @@ export default async function bomb(req: NextApiRequest, res: NextApiResponse) {
     
     await clickResendSmsBtn(page);
 
-    await wait(range(5000, 6000));
+    await wait(range(2000, 4000));
   });
   await Promise.all(promises);
   await browser.close();
