@@ -1,17 +1,17 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { Request, Response } from "express";
 import puppeteer, { executablePath } from "puppeteer";
-import wait from "./_browser/utils/wait";
-import selectors from "./_browser/selectors";
-import range from "./_browser/utils/range";
+import wait from "./utils/wait";
+import selectors from "./selectors";
+import range from "./utils/range";
 import fs from "node:fs";
-import doesStrExistOnPage from "./_browser/utils/doesStrExistOnPage";
-import clickResendSmsBtn from "./_browser/actions/clickResendSmsBtn";
-import inputPhoneNumber from "./_browser/actions/inputPhoneNumber";
-import pressEnter from "./_browser/actions/pressEnter";
-import confirmFirstTime from "./_browser/actions/confirmFirstTime";
-import confirmSecondTimeIfNeeded from "./_browser/actions/confirmSecondTimeIfNeeded";
+import doesStrExistOnPage from "./utils/doesStrExistOnPage";
+import clickResendSmsBtn from "./actions/clickResendSmsBtn";
+import inputPhoneNumber from "./actions/inputPhoneNumber";
+import pressEnter from "./actions/pressEnter";
+import confirmFirstTime from "./actions/confirmFirstTime";
+import confirmSecondTimeIfNeeded from "./actions/confirmSecondTimeIfNeeded";
 
-export default async function bomb(req: NextApiRequest, res: NextApiResponse) {
+export async function bomb(req: Request, res: Response) {
   const phoneNumbersStr = process.env.PHONE_NUMBERS;
   if (!phoneNumbersStr) throw new Error("no phone numbers are provided");
   
