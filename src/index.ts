@@ -5,6 +5,8 @@ import healthCheck from "./controllers/healthCheck";
 import bomb from "./controllers/bomb";
 dotenv.config();
 const PORT = process.env.PORT ?? 3000;
+import btoa from "btoa";
+globalThis.btoa = btoa;
 
 
 const app = express();
