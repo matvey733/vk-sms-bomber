@@ -4,7 +4,7 @@ import range from "../utils/range";
 import wait from "../utils/wait";
 
 export default async function confirmFirstTime(page: Page) {
+  await wait(range(2000, 3000));
   await page.waitForSelector(selectors.firstConfirmBtn);
-  await wait(range(1000, 3000));
   await page.click(selectors.firstConfirmBtn);
 }
