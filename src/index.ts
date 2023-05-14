@@ -1,16 +1,18 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import "express-async-errors";
-import dotenv from "dotenv";
 import healthCheck from "./controllers/healthCheck";
 import bomb from "./controllers/bomb";
-dotenv.config();
-const PORT = process.env.PORT ?? 3000;
+import cors from "cors";
 import btoa from "btoa";
 globalThis.btoa = btoa;
+const PORT = process.env.PORT ?? 3000;
 
 
 const app = express();
 
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 app.get("/health", healthCheck);
